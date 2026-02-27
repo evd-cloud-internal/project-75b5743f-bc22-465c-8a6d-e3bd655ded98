@@ -26,3 +26,15 @@ Zeigt verschiedene Versionen der x10-Daten an.
     filters=["x10_filter"]
 %}
 {% /table %}
+
+```sql x10_bar
+select tariff_49000 as name from databricks_x10_tickets_long_by_tariff 
+where dimension = 'article_shortname'
+```
+
+{% bar_chart
+    data="x10_bar"
+    x="name"
+    y="count(*)"
+    order="count(*) desc"
+/%}
