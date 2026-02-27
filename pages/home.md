@@ -6,8 +6,41 @@ type: page
 
 # Welcome
 
-# Filter nach `sortnumber` (Preisstufe)
+```sql x10_table
+select
+cast(sortnumber as VARCHAR) as sortnumber, dimension, tariff_47012, tariff_48000, tariff_48004, tariff_48008, tariff_48012, tariff_49000, tariff_49004, tariff_50000 
+from databricks_x10_tickets_long_by_tariff
+order by 1, 2
+```
 
+```sql ticket_of_the_day
+with random_sortnumber as (
+    select sortnumber
+    from databricks_x10_tickets_long_by_tariff
+    order by rand()
+    limit 1
+)
+select dimension, tariff_49000 from random_sortnumber l
+left join databricks_x10_tickets_long_by_tariff r
+on l.sortnumber = r.sortnumber
+order by 1
+```
+
+{% details
+    title="🎫 Ticket of the Day"
+    open=true
+%}
+
+**Artikel:** {% value data="ticket_of_the_day" value="tariff_49000" where="dimension = 'article_shortname'" /%}
+
+**Klasse:** {% value data="ticket_of_the_day" value="tariff_49000" where="dimension = 'class'" /%}
+
+**Person:** {% value data="ticket_of_the_day" value="tariff_49000" where="dimension = 'person'" /%}
+
+**Preisstufe:** {% value data="ticket_of_the_day" value="tariff_49000" where="dimension = 'price_level'" /%}
+
+{% /details %}
+# Filtern nach `sortnumber` (Preisstufe)
 {% dropdown
     id="x10_filter"
     data="x10_table"
@@ -15,12 +48,7 @@ type: page
     title="Sortnumber"
     multiple=true
 /%}
-```sql x10_table
-select
-cast(sortnumber as VARCHAR) as sortnumber, dimension, tariff_47012, tariff_48000, tariff_48004, tariff_48008, tariff_48012, tariff_49000, tariff_49004, tariff_50000 
-from databricks_x10_tickets_long_by_tariff
-order by 1, 2
-```
+
 
 {% table
     data="x10_table"
@@ -40,6 +68,7 @@ where dimension = 'article_shortname'
     x="name"
     y="count(*)"
     order="count(*) desc"
+    height=500
     x_axis_options={
         label_rotate=90
     }
