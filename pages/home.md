@@ -5,6 +5,9 @@ type: page
 ---
 
 # Welcome
+
+# Filter nach `sortnumber` (Preisstufe)
+
 {% dropdown
     id="x10_filter"
     data="x10_table"
@@ -19,8 +22,6 @@ from databricks_x10_tickets_long_by_tariff
 order by 1, 2
 ```
 
-Zeigt verschiedene Versionen der x10-Daten an.
-
 {% table
     data="x10_table"
     filters=["x10_filter"]
@@ -32,9 +33,14 @@ select tariff_49000 as name from databricks_x10_tickets_long_by_tariff
 where dimension = 'article_shortname'
 ```
 
+# Anzahl nach Artikelname für Tarif 49000
+
 {% bar_chart
     data="x10_bar"
     x="name"
     y="count(*)"
     order="count(*) desc"
+    x_axis_options={
+        label_rotate=90
+    }
 /%}
